@@ -4,8 +4,65 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: #555
 }
 #app-map {
     width: 100vw;
     height: 100vh
+}
+#map-control {
+       position: absolute;
+       top: 10px;
+       left: calc(50% - 200px);
+      
+       z-index: 999;
+       width: 400px;
+    }
+    .map-search {
+        border-radius: 2px;
+        display: flex;
+        padding: 5px;
+     background-color: #fff;
+}
+.map-search input {
+    width: 85%;
+    padding: 8px 12px;
+    border: 1px solid #e3e3e3;
+}
+.map-search button {
+    flex-grow: 1;
+        background-color: #eee;
+        border: 1px solid #e3e3e3;
+        border-left: none;
+    cursor: pointer
+}
+.map-search button:hover {
+    background: linear-gradient(#fff, #eee);
+}
+.map-search {
+        margin-top: 5px;
+        padding: 5px;
+        background-color: #fff;
+}
+.map-areas {
+    margin-top: 5px
+}
+.map-areas.hidden {
+    display: none
+}
+.map-areas ul {
+    margin: 0;
+    padding: 0%;
+    list-style: none
+}
+.map-areas ul li {
+    background: linear-gradient(#fff, #eee);
+    padding: 10px;
+    margin-bottom: 2px;
+    cursor: pointer
+}
+.map-areas ul li:hover {
+        border-left: 8px solid rgb(24, 129, 199);
+        background: #fff;
 }

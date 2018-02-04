@@ -10,8 +10,20 @@
 </head>
 
 <body>
-    <section >
+    <section id="map-control">
+        <div class="map-search">
+        <input type="search" data-bind="event:{focus: showAreas}" name="map-search" id="search-input">
+
+                <button type="button">filter</button>
+
+        </div>
+        <div class="map-areas hidden">
+<ul data-bind= "foreach:neighbourAreas">
+                <li data-bind="text:$data"></li>
+                </ul>
+        </div>
     </section>
+    
     <section id="app-map"></section>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU"></script>
     <script src="js/knockout.js"></script>

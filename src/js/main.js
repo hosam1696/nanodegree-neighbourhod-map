@@ -4,6 +4,8 @@ class AppViewModel {
     constructor() {
         this.firstName = ko.observable('gyg');
         this.lastName = "rtington";
+        this.neighbourAreas = ko.observableArray(['Cairo', 'Aswan', 'Alexanderia', 'Zagazig', 'Ain shams', 'fayoum'])
+        this.isHidden = ko.observable(true);
         this.loadMap();
     }
     capital() {
@@ -13,6 +15,10 @@ class AppViewModel {
 
     generate() {
         this.firstName(Math.random());
+    }
+
+    showAreas() {
+        document.querySelector('.map-areas').classList.remove('hidden');
     }
 
     loadMap() {
