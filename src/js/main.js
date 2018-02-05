@@ -20,6 +20,17 @@ class AppViewModel {
     showAreas() {
         document.querySelector('.map-areas').classList.remove('hidden');
     }
+    hideAreas( event) {
+        console.log(event);
+        /*
+        setTimeout(() => {
+            document.querySelector('.map-areas').classList.add('hidden');
+        }, 10)*/
+    }
+
+    findPlace(d) {
+        console.log('data', d)
+    }
 
     loadMap() {
 

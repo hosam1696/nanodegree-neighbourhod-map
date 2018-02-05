@@ -12,15 +12,15 @@
 <body>
     <section id="map-control">
         <div class="map-search">
-        <input type="search" data-bind="event:{focus: showAreas}" name="map-search" id="search-input">
+        <input type="search" data-bind="event:{focus: showAreas, blur: hideAreas}" name="map-search" id="search-input">
 
                 <button type="button">filter</button>
 
         </div>
         <div class="map-areas hidden">
-<ul data-bind= "foreach:neighbourAreas">
-                <li data-bind="text:$data"></li>
-                </ul>
+            <ul data-bind= "foreach:neighbourAreas">
+            <li data-bind="text: $data, click: $parent.findPlace">fdf</li>
+            </ul>
         </div>
     </section>
     
