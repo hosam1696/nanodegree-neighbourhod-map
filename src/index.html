@@ -12,21 +12,28 @@
 <body>
     <section id="map-control">
         <div class="map-search">
-        <input type="search" data-bind="event:{focus: showAreas, blur: hideAreas}" name="map-search" id="search-input">
+        <input type="search" data-bind="event:{focus: showAreas, blur: hideAreas}, value:searchValue" name="map-search" placeholder="filter by name" id="search-input">
 
-                <button type="button">filter</button>
+        <button type="button" data-bind="click: filter">filter</button>
 
         </div>
         <div class="map-areas hidden">
             <ul data-bind= "foreach:neighbourAreas">
-            <li data-bind="text: $data, click: $parent.findPlace">fdf</li>
+            <li data-bind="html: title, click: $parent.findPlace"></li>
             </ul>
+
         </div>
     </section>
     
+    <section id="area-info">
+        <h3>Saratoga Library</h3>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Explicabo, assumenda dolorem. Fugiat ipsum ullam enim beatae facere, consequuntur omnis voluptas cum velit, est praesentium adipisci rerum dolores soluta, tempore sapiente!</p>   
+    </section>
+
     <section id="app-map"></section>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU"></script>
     <script src="js/knockout.js"></script>
+    <script src="js/ko.projection.js"></script>
     <script src="js/main.js"></script>
 </body>
 
