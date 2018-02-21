@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npm run reload",
     "reload": "reload -d ./src -b"
   },
   "keywords": [],

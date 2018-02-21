@@ -6,26 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Neighboorhood map</title>
+    <link rel="icon" href="./favicon.ico">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
     <section id="map-control">
         <form class="map-search">    
-            <input type="search" data-bind="event:{enter:filter,focus: function(){toggleArea.call(this,true)}, blur: toggleArea.call(this,true)}, value:searchValue" name="map-search" placeholder="filter by name"
+            <input type="search" data-bind="event:{enter:filter,focus: function(data,event){toggleArea(false, event)}}, value:searchValue" name="map-search" placeholder="filter by name"
     id="search-input">
 
         <button type="submit" data-bind="click: filter">filter</button>
             </form>
-        <div class="map-areas hidden">
+        <div class="map-areas">
             <ul data-bind= "foreach:neighbourAreas">
             <li data-bind="html: title, click: $parent.findPlace"></li>
             </ul>
 
         </div>
-        <section id="area-info" data-bind="visible:showInfo.bind(this)">
-            <h3 data-bind="text:infoWiki.title"></h3>
-            <p data-bind="html:infoWiki.body"></p>
+        <section id="area-info" data-bind="with:infoWiki">
+            <h3 data-bind="text:title"></h3>
+            <p data-bind="html:body"></p>
         </section>
     </section>
     

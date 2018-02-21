@@ -14,7 +14,7 @@ class AppViewModel {
 
     constructor() {
         this.places = [
-            new Place('Saratoga Library', [37.270025, -122.0162]),
+           // new Place('San Jose International Airport', [37.363923, -121.925047]),
             new Place('Saint Andrew\'s Episcopal School', [37.2714124, -122.0165007]),
             new Place('Sofmen - Web & Mobile Development', [37.2721832, -122.0142492]),
             new Place('Warner Hutton House', [37.267423, -122.0166872]),
@@ -32,22 +32,23 @@ class AppViewModel {
         AppViewModel.markers = [];
         this.showInfo = ko.observable(false);
         this.loadMap(this.places);
-        this.infoWiki = ko.observable();
+        this.infoWiki = ko.observable({ title: 'sdfdsf', body: 'asfsdf' });
+        $('.map-areas').slideUp(0);
+        
     }
     capital() {
         var currentVal = this.lastName();        // Read the current value
         this.lastName = currentVal.toUpperCase(); // Write back a modified value
     }
-    set _showInfo(val) {
-        this.showInfo(val)
-    }
+
     generate() {
         this.firstName(Math.random());
     }
 
-    toggleArea(up = false) {
+    toggleArea(up = false, event = null) {
         let mapAreas = $('.map-areas');
-        up ? (mapAreas.slideDown()) : (mapAreas.slideUp())
+        console.log(event,up);
+        up ? (mapAreas.slideUp()) : (mapAreas.slideDown())
     }
 
     initWiki() {
@@ -57,12 +58,12 @@ class AppViewModel {
     findPlace(d) {
         console.log(AppViewModel.markers,'search widi for', d.title);
         this._showInfo = true;
-        let self = this;
+        let self = new AppViewModel();
         //let searchUrl = 'https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&search'
-        let searchUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=cairo';
+        let searchUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search='+d.title;
         let requestLink = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsentences=2&explaintext=&exsectionformat=plain&titles=';
         $.get(searchUrl,{dataType: "jsonp"})
-            .done(function(data){
+            .done((data)=>{
                 console.log(data);
                 let len = data[1].length,
                     index = Math.floor(Math.random()*len),
@@ -70,36 +71,52 @@ class AppViewModel {
                 title = title.replace(/\s+/g,'_');
                 console.log(title);
                 $.post(requestLink.concat(title),{dataType:'jsonp'})
-                    .done(function(data){
+                    .done((data)=>{
                         console.log(data);
                         let page = data.query.pages,
                             key = Object.keys(page)[0];
-                        console.log(page[key].title,page[key].extract);
-                        console.log()
-                        self.infoWiki(new Wiki(page[key].title,page[key].extract))
+                        console.log(page[key].title,page[key].extract, self);
+                        self.createInfoBox(new Wiki(page[key].title,page[key].extract))
                     })
             })
 
+        
     }
 
+    createInfoBox(wiki) {
+        this.showInfo(true);
+        //this.infoWiki(JSON.parse(JSON.stringify(wiki)));
+        this.infoWiki({ title: wiki.title, body: wiki.body });
+        $('#area-info h3').text(wiki.title);
+        $('#area-info p').text(wiki.body||'no available content');
+        
+        console.log('the wiki', this.infoWiki(), this.showInfo());
+    }
+
+    set _infoWiki(wiki) {
+        this.infoWiki(wiki);
+    }
     /*
     function responsible for filtering places the user enter
 
 
     */
     filter() {
-        this.neighbourAreas.push(...this.places);
         let inputValue = this.searchInput.val();
-        let reg = new RegExp(inputValue, 'gi');
-        let filtered = Array.from(this.places)
+        if (inputValue && inputValue.trim()) {
+            this.neighbourAreas.push(...this.places);
+            let reg = new RegExp(inputValue, 'gi');
+            let filtered = Array.from(this.places)
                 .filter(place => place.title.search(reg) >= 0)
                 .map(place => new Place(place.title.replace(reg, '<span class="highlight">$&</span>'), [...place.latlng]));
 
-        this.loadMap(filtered);
-        this.neighbourAreas.destroyAll();
-        this.neighbourAreas.push(...filtered);
-        this.places = this.staticPlaces;
-        //this.showAreas();
+            this.loadMap(filtered);
+            this.neighbourAreas.destroyAll();
+            this.neighbourAreas.push(...filtered);
+            this.places = this.staticPlaces;
+            //this.showAreas();
+        }
+        
         
     }
 
@@ -140,7 +157,6 @@ class AppViewModel {
                 });
                 AppViewModel.markers.push(marker);
                 marker.addListener('click', debounce);
-                
                 marker.setMap(map);
 
                 function debounce() {
@@ -158,7 +174,7 @@ class AppViewModel {
             places.forEach(place => {
                 makeMarker(place.latlng, place.title);
             });
-            console.log(self.markers);
+            console.log(self.markers, places);
         }
     }
 }
