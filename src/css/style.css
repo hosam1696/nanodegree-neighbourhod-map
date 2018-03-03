@@ -14,7 +14,7 @@ body {
 #map-control {
     position: absolute;
     top: 5px;
-    left: 120px;
+    left: calc(50% - 150px);
     z-index: 999;
     width: 300px;
     }
@@ -79,13 +79,13 @@ body {
     position: fixed;
     bottom: 10px;
     z-index: 5;
-    left: calc(50% - 150px);
+    left: 10px;
     width: 300px;
     padding: 10px;
     color: #555;
     font-size: 0.7rem;
-     background-color: #fff;
+    background-color: #fff;
     border-radius: 2px;
-    border: 1px solid #eee;
-    box-shadow: 5px 5px 16px #ccc;
-}
+     border: 1px solid #eee;
+     box-shadow: 5px 5px 16px #ccc;
+    }
