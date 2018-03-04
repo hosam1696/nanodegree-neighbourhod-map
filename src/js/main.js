@@ -10,9 +10,8 @@ class Wiki {
         this.body = body;
     }
 }
-class AppViewModel {
+function  AppViewModel() {
 
-    constructor() {
         this.places = [
            // new Place('San Jose International Airport', [37.363923, -121.925047]),
             new Place('Saint Andrew\'s Episcopal School', [37.2714124, -122.0165007]),
@@ -29,75 +28,68 @@ class AppViewModel {
         this.neighbourAreas = ko.observableArray(this.places);
         this.isHidden = ko.observable(true);
         AppViewModel.markers = [];
-        this.showInfo = ko.observable(false);
-        this.loadMap(this.places);
-        this.infoWiki = ko.observable({ title: 'sdfdsf', body: 'asfsdf' });
+    this.showInfo = ko.observable(false);
+        
+    this.searchTitle = ko.observable('placeholder title');
+    this.searchBody = ko.observable('placeholder body');
         $('.map-areas').slideUp(0);
-    }
+        ko.options.useOnlyNativeEvents = true;
+    
 
-    capital() {
+    this.capital = ()=> {
         var currentVal = this.lastName();        // Read the current value
         this.lastName = currentVal.toUpperCase(); // Write back a modified value
     }
 
-    generate() {
+    this.generate = ()=> {
         this.firstName(Math.random());
     }
 
-    toggleArea(up = false, event = null) {
+    this.toggleArea = (up = false, event = null)=> {
         let mapAreas = $('.map-areas');
-        console.log(event,up);
+        //console.log(event,up);
         up ? (mapAreas.slideUp()) : (mapAreas.slideDown())
     }
 
-    initWiki() {
-        
-    }
-
-    findPlace(d) {
-        console.log(AppViewModel.markers,'search widi for', d.title);
-        this._showInfo = true;
-        let self = new AppViewModel();
+    this.findPlace = (d) => {
+        console.log(AppViewModel.markers,'search wiki for', d.title);
+        let self = this;
         //let searchUrl = 'https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&search'
-        let searchUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search='+d.title;
+        let searchUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=' + d.title;
         let requestLink = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsentences=2&explaintext=&exsectionformat=plain&titles=';
-        $.get(searchUrl,{datatype: "jsonp"})
-            .done((data)=>{
-                console.log(data);
+        $.get(searchUrl,{datatype: "jsonp", origin:'*'})
+            .done((data) => {
                 let len = data[1].length,
                     index = Math.floor(Math.random()*len),
                     title = data[1][index];
                 title = title.replace(/\s+/g,'_');
-                console.log(title);
-                $.post(requestLink.concat(title),{datatype:'jsonp'})
+                console.group('WIKI URL SEARCH');
+                console.log('SearchUrl Wiki data', data);
+                console.log('Title', title);
+                console.groupEnd();
+                $.post(requestLink.concat(title),{datatype:'jsonp', origin: '*'})
                     .done((data)=>{
-                        console.log(data);
                         let page = data.query.pages,
                             key = Object.keys(page)[0];
-                        console.log(page[key].title,page[key].extract, self);
                         self.createInfoBox(new Wiki(page[key].title,page[key].extract))
+                        console.group('WIKI SEARCH RESULT');
+                        console.log('DATA', data,'\n\b',page[key].title,page[key].extract);
+                        console.groupEnd();
                     })
             })
     }
 
-    createInfoBox(wiki) {
+    this.createInfoBox = (wiki) => {
+        this.searchTitle(wiki.title).searchBody(wiki.body||'ooh.. content not available!');
         this.showInfo(true);
-        //this.infoWiki(JSON.parse(JSON.stringify(wiki)));
-        this.infoWiki({ title: wiki.title, body: wiki.body });
-        $('#area-info h3').text(wiki.title);
-        $('#area-info p').text(wiki.body||'no available content');    
-        console.log('the wiki', this.infoWiki(), this.showInfo());
-    }
-
-    set _infoWiki(wiki) {
-        this.infoWiki(wiki);
+        console.log('the wiki',this.searchTitle(),'\ body\n', this.searchBody(), this.showInfo());
     }
     /*
     function responsible for filtering places the user enter
 
 
     */
-    filter() {
+    this.filter= () => {
         let inputValue = this.searchInput.val();
         if (inputValue && inputValue.trim()) {
             this.neighbourAreas.push(...this.places);
@@ -114,7 +106,7 @@ class AppViewModel {
         }
     }
 
-    trackKey(val, event) {
+    this.trackKey = (val, event) => {
         if (event.which === 13) {
             console.log(event);
             this.filter();
@@ -126,7 +118,7 @@ class AppViewModel {
 
 
     */
-    loadMap(places) {
+    this.loadMap = (places) => {
         let self = this;
         google.maps.event.addDomListener(window, 'load', init);
         function init() {
@@ -165,9 +157,11 @@ class AppViewModel {
             places.forEach(place => {
                 makeMarker(place.latlng, place.title);
             });
-            console.log(self.markers, places);
+            //console.log(self.markers, places);
         }
     }
+
+    this.loadMap(this.places);
 }
 
 // Activates knockout.js

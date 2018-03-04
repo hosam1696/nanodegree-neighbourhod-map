@@ -27,7 +27,7 @@ body {
 .map-search input {
     width: 85%;
     padding: 8px 12px;
-    border: 1px solid #e3e3e3;
+    border: 1px solid #f3f3f3;
 }
 .map-search button {
     flex-grow: 1;
