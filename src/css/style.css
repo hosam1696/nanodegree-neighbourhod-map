@@ -29,6 +29,12 @@ body {
     padding: 8px 12px;
     border: 1px solid #f3f3f3;
 }
+.map-search .area-slide-up {
+    position: absolute;
+    right:20%;
+    top: -2px;
+    cursor: pointer
+}
 .map-search button {
     flex-grow: 1;
         background-color: #eee;

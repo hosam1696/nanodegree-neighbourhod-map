@@ -15,7 +15,7 @@
         <form class="map-search">
             <input type="search" data-bind="event:{enter:filter,focus: function(data,event){toggleArea(false, event)}}, value:searchValue"
                 name="map-search" placeholder="filter by name" id="search-input">
-
+<p class="area-slide-up" data-bind="visible:areasUp, click:toggleClose">x</p>
             <button type="submit" data-bind="click: filter">filter</button>
         </form>
         <div class="map-areas">
@@ -34,7 +34,6 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU"></script>
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/knockout.js"></script>
-    <script src="js/ko.projection.js"></script>
     <script src="js/main.js"></script>
 </body>
 

@@ -14,10 +14,10 @@ function AppViewModel() {
 
     this.places = [
         // new Place('San Jose International Airport', [37.363923, -121.925047]),
+        new Place('post office', [37.2668765, -122.0164405]),
         new Place('Saint Andrew\'s Episcopal School', [37.2714124, -122.0165007]),
         new Place('Sofmen - Web & Mobile Development', [37.2721832, -122.0142492]),
         new Place('Warner Hutton House', [37.267423, -122.0166872]),
-        new Place('post office', [37.2668765, -122.0164405]),
         new Place('Redwood Middle School', [37.2651859, -122.014638]),
         new Place('Fruitivale Ave', [37.2677997, -122.0149752]),
     ];
@@ -30,7 +30,7 @@ function AppViewModel() {
     this.showLoader = ko.observable(false);
     AppViewModel.markers = [];
     this.showInfo = ko.observable(false);
-
+    this.areasUp = ko.observable(false);
     this.searchTitle = ko.observable('placeholder title');
     this.searchBody = ko.observable('placeholder body');
     $('.map-areas').slideUp(0);
@@ -48,14 +48,18 @@ function AppViewModel() {
 
     this.toggleArea = (up = false, event = null) => {
         let mapAreas = $('.map-areas');
-        //console.log(event,up);
+        this.areasUp(true);
         up ? (mapAreas.slideUp()) : (mapAreas.slideDown())
     }
 
+    this.toggleClose = () => {
+        let mapAreas = $('.map-areas');
+        this.areasUp(false);
+        mapAreas.slideUp()
+    }
     this.findPlace = (d) => {
-        console.log(AppViewModel.markers, 'search wiki for', d.title);
+        //console.log(AppViewModel.markers, 'search wiki for', d.title);
         let self = this;
-        //let searchUrl = 'https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&search'
         let searchUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=' + d.title;
         let requestLink = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsentences=2&explaintext=&exsectionformat=plain&titles=';
         let noDataHandler = () => {
