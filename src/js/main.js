@@ -10,86 +10,97 @@ class Wiki {
         this.body = body;
     }
 }
-function  AppViewModel() {
+function AppViewModel() {
 
-        this.places = [
-           // new Place('San Jose International Airport', [37.363923, -121.925047]),
-            new Place('Saint Andrew\'s Episcopal School', [37.2714124, -122.0165007]),
-            new Place('Sofmen - Web & Mobile Development', [37.2721832, -122.0142492]),
-            new Place('Warner Hutton House', [37.267423, -122.0166872]),
-            new Place('post office', [37.2668765, -122.0164405]),
-            new Place('Redwood Middle School', [37.2651859, -122.014638]),
-            new Place('Fruitivale Ave', [37.2677997, -122.0149752]),
-        ];
-        this.staticPlaces = this.places.slice();
-        this.firstName = ko.observable('gyg');
-        this.searchInput = $('#search-input');
-        this.searchValue = ko.observable('');
-        this.neighbourAreas = ko.observableArray(this.places);
-        this.isHidden = ko.observable(true);
-        AppViewModel.markers = [];
+    this.places = [
+        // new Place('San Jose International Airport', [37.363923, -121.925047]),
+        new Place('Saint Andrew\'s Episcopal School', [37.2714124, -122.0165007]),
+        new Place('Sofmen - Web & Mobile Development', [37.2721832, -122.0142492]),
+        new Place('Warner Hutton House', [37.267423, -122.0166872]),
+        new Place('post office', [37.2668765, -122.0164405]),
+        new Place('Redwood Middle School', [37.2651859, -122.014638]),
+        new Place('Fruitivale Ave', [37.2677997, -122.0149752]),
+    ];
+    this.staticPlaces = this.places.slice();
+    this.firstName = ko.observable('gyg');
+    this.searchInput = $('#search-input');
+    this.searchValue = ko.observable('');
+    this.neighbourAreas = ko.observableArray(this.places);
+    this.isHidden = ko.observable(true);
+    this.showLoader = ko.observable(false);
+    AppViewModel.markers = [];
     this.showInfo = ko.observable(false);
-        
+
     this.searchTitle = ko.observable('placeholder title');
     this.searchBody = ko.observable('placeholder body');
-        $('.map-areas').slideUp(0);
-        ko.options.useOnlyNativeEvents = true;
-    
+    $('.map-areas').slideUp(0);
+    ko.options.useOnlyNativeEvents = true;
 
-    this.capital = ()=> {
+
+    this.capital = () => {
         var currentVal = this.lastName();        // Read the current value
         this.lastName = currentVal.toUpperCase(); // Write back a modified value
     }
 
-    this.generate = ()=> {
+    this.generate = () => {
         this.firstName(Math.random());
     }
 
-    this.toggleArea = (up = false, event = null)=> {
+    this.toggleArea = (up = false, event = null) => {
         let mapAreas = $('.map-areas');
         //console.log(event,up);
         up ? (mapAreas.slideUp()) : (mapAreas.slideDown())
     }
 
     this.findPlace = (d) => {
-        console.log(AppViewModel.markers,'search wiki for', d.title);
+        console.log(AppViewModel.markers, 'search wiki for', d.title);
         let self = this;
         //let searchUrl = 'https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&search'
         let searchUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=' + d.title;
         let requestLink = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsentences=2&explaintext=&exsectionformat=plain&titles=';
-        $.get(searchUrl,{datatype: "jsonp", origin:'*'})
+        let noDataHandler = () => {
+            this.showLoader(false);
+            this.searchTitle('content not reached, try again!').searchBody('')
+        }
+        this.showLoader(true);
+        $.get(searchUrl, { datatype: "jsonp", origin: '*' })
             .done((data) => {
                 let len = data[1].length,
-                    index = Math.floor(Math.random()*len),
+                    index = Math.floor(Math.random() * len),
                     title = data[1][index];
-                title = title.replace(/\s+/g,'_');
-                console.group('WIKI URL SEARCH');
-                console.log('SearchUrl Wiki data', data);
-                console.log('Title', title);
-                console.groupEnd();
-                $.post(requestLink.concat(title),{datatype:'jsonp', origin: '*'})
-                    .done((data)=>{
-                        let page = data.query.pages,
-                            key = Object.keys(page)[0];
-                        self.createInfoBox(new Wiki(page[key].title,page[key].extract))
-                        console.group('WIKI SEARCH RESULT');
-                        console.log('DATA', data,'\n\b',page[key].title,page[key].extract);
-                        console.groupEnd();
-                    })
-            })
+                if (title) {
+                    title = title.replace(/\s+/g, '_');
+                    console.group('WIKI URL SEARCH');
+                    console.log('SearchUrl Wiki data', data);
+                    console.log('Title', title);
+                    console.groupEnd();
+                    $.post(requestLink.concat(title), { datatype: 'jsonp', origin: '*' })
+                        .done((data) => {
+                            let page = data.query.pages,
+                                key = Object.keys(page)[0];
+                            self.createInfoBox(new Wiki(page[key].title, page[key].extract))
+                            console.group('WIKI SEARCH RESULT');
+                            console.log('DATA', data, '\n\b', page[key].title, page[key].extract);
+                            console.groupEnd();
+                        }).fail(noDataHandler)
+                } else {
+                    noDataHandler()
+                }
+            }).fail(noDataHandler);
     }
 
     this.createInfoBox = (wiki) => {
-        this.searchTitle(wiki.title).searchBody(wiki.body||'ooh.. content not available!');
+        this.searchTitle(wiki.title).searchBody(wiki.body || 'ooh.. content not available!');
         this.showInfo(true);
-        console.log('the wiki',this.searchTitle(),'\ body\n', this.searchBody(), this.showInfo());
+        this.showLoader(false);
+        console.log('the wiki', this.searchTitle(), '\ body\n', this.searchBody(), this.showInfo());
     }
     /*
     function responsible for filtering places the user enter
 
 
     */
-    this.filter= () => {
+    this.filter = () => {
         let inputValue = this.searchInput.val();
         if (inputValue && inputValue.trim()) {
             this.neighbourAreas.push(...this.places);
@@ -160,7 +171,6 @@ function  AppViewModel() {
             //console.log(self.markers, places);
         }
     }
-
     this.loadMap(this.places);
 }
 
