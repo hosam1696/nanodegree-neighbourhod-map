@@ -11,27 +11,37 @@
 </head>
 
 <body>
-    <section id="map-control">
-        <form class="map-search">
-            <input type="search" data-bind="event:{enter:filter,focus: function(data,event){toggleArea(false, event)}}, value:searchValue"
-                name="map-search" placeholder="filter by name" id="search-input">
-<p class="area-slide-up" data-bind="visible:areasUp, click:toggleClose">x</p>
-            <button type="submit" data-bind="click: filter">filter</button>
-        </form>
-        <div class="map-areas">
-            <ul data-bind="foreach:neighbourAreas">
-                <li data-bind="html: title, click: $parent.findPlace"></li>
-            </ul>
-        </div>
-        <section id="area-info" data-bind="visible: showInfo" style="display: none">
-            <h3 data-bind="text: searchTitle "></h3>
-            <p data-bind="html: searchBody "></p>
-            <div class="loader" data-bind="visible: showLoader"></div>
+    <!--<p data-bind="text: mapError"></p>-->
+<section id="map-app" data-bind="visible: noMapError">
+<section id="map-control">
+            <form class="map-search">
+                <input type="search" data-bind="event:{enter:filter,focus: function(data,event){toggleArea(false, event)}}, value:searchValue"
+                    name="map-search" placeholder="filter by name" id="search-input">
+                <p class="area-slide-up" data-bind="visible:areasUp, click:toggleClose">x</p>
+                <button type="submit" data-bind="click: filter">filter</button>
+            </form>
+            <div class="map-areas">
+                <ul data-bind="foreach:neighbourAreas">
+                    <li data-bind="html: title, click: $parent.findPlace"></li>
+                </ul>
+            </div>
+            <section id="area-info" data-bind="visible: showInfo" style="display: none">
+                <h3 data-bind="text: searchTitle "></h3>
+                <p data-bind="html: searchBody "></p>
+                <div class="loader" data-bind="visible: showLoader"></div>
+            </section>
         </section>
+        <section id="app-map"></section>
     </section>
-    <section id="app-map"></section>
 
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU"></script>
+    <section data-bind="visible: mapError" id="map-err">
+        Opps something went wrong!
+        <br>
+        <span>try reloading the page</span>
+    </section>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU&callback=initMap"
+ onerror="handleGoogleError()" async defer></script>
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/knockout.js"></script>
     <script src="js/main.js"></script>

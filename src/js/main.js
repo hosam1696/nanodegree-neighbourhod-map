@@ -1,3 +1,4 @@
+
 class Place {
     constructor(title, latlng) {
         this.title = title;
@@ -28,35 +29,38 @@ function AppViewModel() {
     this.neighbourAreas = ko.observableArray(this.places);
     this.isHidden = ko.observable(true);
     this.showLoader = ko.observable(false);
-    AppViewModel.markers = [];
+    this.markers = [];
+    this.mapError = ko.observable(false);
+    this.noMapError = ko.observable(true);
     this.showInfo = ko.observable(false);
     this.areasUp = ko.observable(false);
     this.searchTitle = ko.observable('placeholder title');
     this.searchBody = ko.observable('placeholder body');
     $('.map-areas').slideUp(0);
-    ko.options.useOnlyNativeEvents = true;
+
 
 
     this.capital = () => {
         var currentVal = this.lastName();        // Read the current value
         this.lastName = currentVal.toUpperCase(); // Write back a modified value
-    }
+    };
 
     this.generate = () => {
         this.firstName(Math.random());
-    }
+    };
 
     this.toggleArea = (up = false, event = null) => {
         let mapAreas = $('.map-areas');
         this.areasUp(true);
-        up ? (mapAreas.slideUp()) : (mapAreas.slideDown())
-    }
+        up ? (mapAreas.slideUp()) : (mapAreas.slideDown());
+    };
 
     this.toggleClose = () => {
         let mapAreas = $('.map-areas');
         this.areasUp(false);
         mapAreas.slideUp()
-    }
+    };
+
     this.findPlace = (d) => {
         //console.log(AppViewModel.markers, 'search wiki for', d.title);
         let self = this;
@@ -64,7 +68,7 @@ function AppViewModel() {
         let requestLink = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsentences=2&explaintext=&exsectionformat=plain&titles=';
         let noDataHandler = () => {
             this.showLoader(false);
-            this.searchTitle('content not reached, try again!').searchBody('')
+            this.searchTitle('content not reached, try again!').searchBody('');
         }
         this.showLoader(true);
         $.get(searchUrl, { datatype: "jsonp", origin: '*' })
@@ -88,17 +92,17 @@ function AppViewModel() {
                             console.groupEnd();
                         }).fail(noDataHandler)
                 } else {
-                    noDataHandler()
+                    noDataHandler();
                 }
             }).fail(noDataHandler);
-    }
+    };
 
     this.createInfoBox = (wiki) => {
         this.searchTitle(wiki.title).searchBody(wiki.body || 'ooh.. content not available!');
         this.showInfo(true);
         this.showLoader(false);
         console.log('the wiki', this.searchTitle(), '\ body\n', this.searchBody(), this.showInfo());
-    }
+    };
     /*
     function responsible for filtering places the user enter
 
@@ -119,14 +123,14 @@ function AppViewModel() {
             this.places = this.staticPlaces;
             //this.showAreas();
         }
-    }
+    };
 
     this.trackKey = (val, event) => {
         if (event.which === 13) {
             console.log(event);
             this.filter();
         }
-    }
+    };
 
     /*
         a function responsible for initiating google maps
@@ -135,7 +139,6 @@ function AppViewModel() {
     */
     this.loadMap = (places) => {
         let self = this;
-        google.maps.event.addDomListener(window, 'load', init);
         function init() {
             let myLat = new google.maps.LatLng(...places[0].latlng); // silicon valley;
             let mapOptions = {
@@ -174,10 +177,19 @@ function AppViewModel() {
             });
             //console.log(self.markers, places);
         }
-    }
-    this.loadMap(this.places);
+    };
+    this.handleMapError = () => {
+        this.mapError(true);
+        this.noMapError(false);
+        console.log(this.mapError());
+    };
+    
 }
 
+const appViewModel = new AppViewModel();
+
+let handleGoogleError = (err) => appViewModel.handleMapError();
+let initMap = () => appViewModel.loadMap(appViewModel.places);
 // Activates knockout.js
-ko.applyBindings(new AppViewModel());
+ko.applyBindings(appViewModel);
 
