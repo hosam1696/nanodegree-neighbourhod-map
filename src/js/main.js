@@ -36,9 +36,8 @@ function AppViewModel() {
     this.areasUp = ko.observable(false);
     this.searchTitle = ko.observable('placeholder title');
     this.searchBody = ko.observable('placeholder body');
+    this.filterValue = ko.observable('');
     $('.map-areas').slideUp(0);
-
-
 
     this.capital = () => {
         var currentVal = this.lastName();        // Read the current value
@@ -98,7 +97,7 @@ function AppViewModel() {
     };
 
     this.createInfoBox = (wiki) => {
-        this.searchTitle(wiki.title).searchBody(wiki.body || 'ooh.. content not available!');
+        this.searchTitle(wiki.title+'<p>provided from ( WIKIPEDIA ) </p>').searchBody(wiki.body || 'ooh.. content not available!');
         this.showInfo(true);
         this.showLoader(false);
         console.log('the wiki', this.searchTitle(), '\ body\n', this.searchBody(), this.showInfo());
@@ -109,7 +108,8 @@ function AppViewModel() {
 
     */
     this.filter = () => {
-        let inputValue = this.searchInput.val();
+        let inputValue = this.filterValue();
+        console.log('filtered value', inputValue);
         if (inputValue && inputValue.trim()) {
             this.neighbourAreas.push(...this.places);
             let reg = new RegExp(inputValue, 'gi');
@@ -138,7 +138,9 @@ function AppViewModel() {
 
     */
     this.loadMap = (places) => {
+        console.log('load Map', places);
         let self = this;
+        google.maps.event.addDomListener(window, 'load', init);
         function init() {
             let myLat = new google.maps.LatLng(...places[0].latlng); // silicon valley;
             let mapOptions = {
@@ -157,8 +159,11 @@ function AppViewModel() {
                     animation: google.maps.Animation.DROP,
                     title
                 });
-                AppViewModel.markers.push(marker);
-                marker.addListener('click', debounce);
+                self.markers.push(marker);
+                marker.addListener('click', (event) => {
+                    debounce();
+                    self.findPlace(new Place(title,loc));
+                });
                 marker.setMap(map);
 
                 function debounce() {
@@ -189,7 +194,7 @@ function AppViewModel() {
 const appViewModel = new AppViewModel();
 
 let handleGoogleError = (err) => appViewModel.handleMapError();
-let initMap = () => appViewModel.loadMap(appViewModel.places);
+function initmap()  { appViewModel.loadMap(appViewModel.places) };
 // Activates knockout.js
 ko.applyBindings(appViewModel);
 

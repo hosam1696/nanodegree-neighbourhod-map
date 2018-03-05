@@ -15,7 +15,7 @@
 <section id="map-app" data-bind="visible: noMapError">
 <section id="map-control">
             <form class="map-search">
-                <input type="search" data-bind="event:{enter:filter,focus: function(data,event){toggleArea(false, event)}}, value:searchValue"
+                <input type="search" data-bind="textInput: filterValue,event:{enter:filter,focus: function(data,event){toggleArea(false, event)}}, value:searchValue"
                     name="map-search" placeholder="filter by name" id="search-input">
                 <p class="area-slide-up" data-bind="visible:areasUp, click:toggleClose">x</p>
                 <button type="submit" data-bind="click: filter">filter</button>
@@ -26,7 +26,7 @@
                 </ul>
             </div>
             <section id="area-info" data-bind="visible: showInfo" style="display: none">
-                <h3 data-bind="text: searchTitle "></h3>
+                <h3 data-bind="html: searchTitle "></h3>
                 <p data-bind="html: searchBody "></p>
                 <div class="loader" data-bind="visible: showLoader"></div>
             </section>
@@ -40,8 +40,8 @@
         <span>try reloading the page</span>
     </section>
 
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU&callback=initMap"
- onerror="handleGoogleError()" async defer></script>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU&callback=initmap"
+ onerror="handleGoogleError()" ></script>
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/knockout.js"></script>
     <script src="js/main.js"></script>

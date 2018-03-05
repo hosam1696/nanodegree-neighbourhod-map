@@ -110,6 +110,13 @@ body {
      box-shadow: 5px 5px 16px #ccc;
 }
 
+#area-info h3 p {
+    color: #009688;
+    margin: 0;
+    font-size: 0.6rem;
+    font-weight: 300;
+}
+
 #area-info .loader {
     position: absolute;
     top: 8px;
