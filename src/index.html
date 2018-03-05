@@ -13,18 +13,19 @@
 <body>
     <!--<p data-bind="text: mapError"></p>-->
 <section id="map-app" data-bind="visible: noMapError">
-<section id="map-control">
+    <section id="map-control">
             <form class="map-search">
-                <input type="search" data-bind="textInput: filterValue,event:{enter:filter,focus: function(data,event){toggleArea(false, event)}}, value:searchValue"
+                <input type="search" data-bind="textInput: filterValue,event:{enter:filter}, value:filterValue"
                     name="map-search" placeholder="filter by name" id="search-input">
-                <p class="area-slide-up" data-bind="visible:areasUp, click:toggleClose">x</p>
-                <button type="submit" data-bind="click: filter">filter</button>
+                <!--<p class="area-slide-up" data-bind="visible:areasUp, click:toggleClose">x</p>-->
+                <button type="submit" data-bind="click: filter"><img width="30" src="https://png.icons8.com/nolan/50/000000/filter.png"></button>
             </form>
             <div class="map-areas">
                 <ul data-bind="foreach:neighbourAreas">
                     <li data-bind="html: title, click: $parent.findPlace"></li>
-                </ul>
+                </ul>    
             </div>
+            <p class="toggle-slide" data-bind="click: toggleClose">&#8645;</p>
             <section id="area-info" data-bind="visible: showInfo" style="display: none">
                 <h3 data-bind="html: searchTitle "></h3>
                 <p data-bind="html: searchBody "></p>
@@ -40,11 +41,12 @@
         <span>try reloading the page</span>
     </section>
 
-    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU&callback=initmap"
- onerror="handleGoogleError()" ></script>
+    
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/knockout.js"></script>
     <script src="js/main.js"></script>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU&callback=initmap"
+        onerror="handleGoogleError()"></script>
 </body>
 
 </html>

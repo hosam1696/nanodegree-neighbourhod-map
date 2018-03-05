@@ -11,10 +11,9 @@ class Wiki {
         this.body = body;
     }
 }
-function AppViewModel() {
 
+function AppViewModel() {
     this.places = [
-        // new Place('San Jose International Airport', [37.363923, -121.925047]),
         new Place('post office', [37.2668765, -122.0164405]),
         new Place('Saint Andrew\'s Episcopal School', [37.2714124, -122.0165007]),
         new Place('Sofmen - Web & Mobile Development', [37.2721832, -122.0142492]),
@@ -23,8 +22,6 @@ function AppViewModel() {
         new Place('Fruitivale Ave', [37.2677997, -122.0149752]),
     ];
     this.staticPlaces = this.places.slice();
-    this.firstName = ko.observable('gyg');
-    this.searchInput = $('#search-input');
     this.searchValue = ko.observable('');
     this.neighbourAreas = ko.observableArray(this.places);
     this.isHidden = ko.observable(true);
@@ -33,20 +30,11 @@ function AppViewModel() {
     this.mapError = ko.observable(false);
     this.noMapError = ko.observable(true);
     this.showInfo = ko.observable(false);
-    this.areasUp = ko.observable(false);
+    this.areasUp = ko.observable(true);
     this.searchTitle = ko.observable('placeholder title');
     this.searchBody = ko.observable('placeholder body');
     this.filterValue = ko.observable('');
-    $('.map-areas').slideUp(0);
-
-    this.capital = () => {
-        var currentVal = this.lastName();        // Read the current value
-        this.lastName = currentVal.toUpperCase(); // Write back a modified value
-    };
-
-    this.generate = () => {
-        this.firstName(Math.random());
-    };
+    $('.map-areas').slideDown();
 
     this.toggleArea = (up = false, event = null) => {
         let mapAreas = $('.map-areas');
@@ -56,8 +44,7 @@ function AppViewModel() {
 
     this.toggleClose = () => {
         let mapAreas = $('.map-areas');
-        this.areasUp(false);
-        mapAreas.slideUp()
+        mapAreas.slideToggle()
     };
 
     this.findPlace = (d) => {
@@ -97,7 +84,7 @@ function AppViewModel() {
     };
 
     this.createInfoBox = (wiki) => {
-        this.searchTitle(wiki.title+'<p>provided from ( WIKIPEDIA ) </p>').searchBody(wiki.body || 'ooh.. content not available!');
+        this.searchTitle(wiki.title +'<p>📖 provided from ( WIKIPEDIA ) </p>').searchBody(wiki.body || 'ooh.. content not available!');
         this.showInfo(true);
         this.showLoader(false);
         console.log('the wiki', this.searchTitle(), '\ body\n', this.searchBody(), this.showInfo());
@@ -146,6 +133,7 @@ function AppViewModel() {
             let mapOptions = {
                 zoom: 15,
                 center: myLat,
+                fullscreenControl: false
                 //styles: [{ "featureType": "all", "elementType": "all", "stylers": [{ "visibility": "on" }] }, { "featureType": "all", "elementType": "labels", "stylers": [{ "visibility": "off" }, { "saturation": "-100" }] }, { "featureType": "all", "elementType": "labels.text.fill", "stylers": [{ "saturation": 36 }, { "color": "#000000" }, { "lightness": 50 }, { "visibility": "off" }] }, { "featureType": "all", "elementType": "labels.text.stroke", "stylers": [{ "visibility": "off" }, { "color": "#000000" }, { "lightness": 20 }] }, { "featureType": "all", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [{ "color": "#000000" }, { "lightness": 20 }] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{ "color": "#000000" }, { "lightness": 17 }, { "weight": 1.2 }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#000000" }, { "lightness": 20 }] }, { "featureType": "landscape", "elementType": "geometry.fill", "stylers": [{ "color": "#4d6059" }] }, { "featureType": "landscape", "elementType": "geometry.stroke", "stylers": [{ "color": "#4d6059" }] }, { "featureType": "landscape.natural", "elementType": "geometry.fill", "stylers": [{ "color": "#4d6059" }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "lightness": 21 }] }, { "featureType": "poi", "elementType": "geometry.fill", "stylers": [{ "color": "#4d6059" }] }, { "featureType": "poi", "elementType": "geometry.stroke", "stylers": [{ "color": "#4d6059" }] }, { "featureType": "road", "elementType": "geometry", "stylers": [{ "visibility": "on" }, { "color": "#7f8d89" }] }, { "featureType": "road", "elementType": "geometry.fill", "stylers": [{ "color": "#7f8d89" }] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{ "color": "#7f8d89" }, { "lightness": 17 }] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#7f8d89" }, { "lightness": 29 }, { "weight": 0.2 }] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [{ "color": "#000000" }, { "lightness": 18 }] }, { "featureType": "road.arterial", "elementType": "geometry.fill", "stylers": [{ "color": "#7f8d89" }] }, { "featureType": "road.arterial", "elementType": "geometry.stroke", "stylers": [{ "color": "#7f8d89" }] }, { "featureType": "road.local", "elementType": "geometry", "stylers": [{ "color": "#000000" }, { "lightness": 16 }] }, { "featureType": "road.local", "elementType": "geometry.fill", "stylers": [{ "color": "#7f8d89" }] }, { "featureType": "road.local", "elementType": "geometry.stroke", "stylers": [{ "color": "#7f8d89" }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#000000" }, { "lightness": 19 }] }, { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#2b3638" }, { "visibility": "on" }] }, { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#2b3638" }, { "lightness": 17 }] }, { "featureType": "water", "elementType": "geometry.fill", "stylers": [{ "color": "#24282b" }] }, { "featureType": "water", "elementType": "geometry.stroke", "stylers": [{ "color": "#24282b" }] }, { "featureType": "water", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "labels.text", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "labels.text.fill", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "labels.text.stroke", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }]
             };
             let mapElement = document.getElementById('app-map');

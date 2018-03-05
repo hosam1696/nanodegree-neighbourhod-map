@@ -17,7 +17,7 @@ body {
 #map-control {
     position: absolute;
     top: 5px;
-    left: calc(50% - 119px);
+    right: 5px;
     z-index: 999;
     width: 300px;
 }
@@ -35,6 +35,10 @@ body {
     border: 1px solid #f3f3f3;
 }
 
+.map-search input::placeholder {
+    color: #CCC
+}
+
 .map-search .area-slide-up {
     position: absolute;
     right:20%;
@@ -44,10 +48,10 @@ body {
 
 .map-search button {
     flex-grow: 1;
-        background-color: #eee;
-        border: 1px solid #e3e3e3;
-        border-left: none;
-    cursor: pointer
+    background-color: #fdfdfd;
+    border: 1px solid #f3f3f3;
+    border-left: none;
+    cursor: pointer;
 }
 
 .map-search button:hover {
@@ -75,7 +79,7 @@ body {
 }
 
 .map-areas ul li {
-        background: #eaeaeaf5;
+    background: #f5f5f5f5;
     padding: 10px;
     margin-bottom: 2px;
     cursor: pointer;
@@ -137,11 +141,21 @@ body {
 @media (max-width: 450px) {
     #map-control {
         width: 58vw;
-        left: 30vw;
     }
     .map-areas ul li {
         font-size: 0.7em
     }
+}
+
+.toggle-slide {
+    background: #fff;
+    text-align: center;
+    list-style: none;
+    font-weight: bold;
+    color: rgb(24, 129, 199);
+    margin: 2px auto;
+    cursor: pointer;
+    box-shadow: 1px 1px 20px #eee;
 }
 
 #map-err {
