@@ -5,47 +5,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Neighboorhood map</title>
+    <title>Neighbourhood map</title>
     <link rel="icon" href="./favicon.ico">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <!--<p data-bind="text: mapError"></p>-->
-<section id="map-app" data-bind="visible: noMapError">
-    <section id="map-control">
-            <form class="map-search">
-                <input type="search" data-bind="textInput: filterValue,event:{enter:filter}, value:filterValue"
-                    name="map-search" placeholder="filter by name" id="search-input">
-                <!--<p class="area-slide-up" data-bind="visible:areasUp, click:toggleClose">x</p>-->
-                <button type="submit" data-bind="click: filter"><img width="30" src="https://png.icons8.com/nolan/50/000000/filter.png"></button>
-            </form>
-            <div class="map-areas">
-                <ul data-bind="foreach:neighbourAreas">
-                    <li data-bind="html: title, click: $parent.findPlace"></li>
-                </ul>    
-            </div>
-            <p class="toggle-slide" data-bind="click: toggleClose">&#8645;</p>
-            <section id="area-info" data-bind="visible: showInfo" style="display: none">
-                <h3 data-bind="html: searchTitle "></h3>
-                <p data-bind="html: searchBody "></p>
-                <div class="loader" data-bind="visible: showLoader"></div>
-            </section>
+<section class="map-app" data-bind="visible: noMapError">
+    <section class="map-control">
+        <form class="map-search">
+            <input type="search" data-bind="textInput: filterValue,event:{enter:filter}, value:filterValue"
+                   name="map-search" placeholder="filter by name" id="search-input">
+            <button type="submit" data-bind="click: filter"><img width="20" src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../assets/preview/2012/png/iconmonstr-filter-6.png&r=176&g=176&b=176"></button>
+        </form>
+        <p data-bind="visible:noMatchedData" class="no-filter-data">No Matches..</p>
+        <div class="map-areas" data-bind="css:{hidden: areasUp}">
+            <ul data-bind="foreach:neighbourAreas">
+                <li data-bind="html: title, click: $parent.findPlace"></li>
+            </ul>
+        </div>
+        <p class="toggle-slide" data-bind="click: toggleArea">&#8645;</p>
+        <section class="area-info" data-bind="visible: showInfo" style="display: none">
+            <h3 data-bind="html: searchTitle "></h3>
+            <p data-bind="html: searchBody "></p>
+            <div class="loader" data-bind="visible: showLoader"></div>
         </section>
-        <section id="app-map"></section>
     </section>
+    <section id="app-map"></section>
+</section>
 
-    <section data-bind="visible: mapError" id="map-err">
-        Opps something went wrong!
-        <br>
-        <span>try reloading the page</span>
-    </section>
+<section data-bind="visible: mapError" class="map-err">
+    Opps something went wrong!
+    <br>
+    <span>try reloading the page</span>
+</section>
 
-    
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/knockout.js"></script>
-    <script src="js/main.js"></script>
-    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU&callback=initmap"
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/knockout.js"></script>
+<script src="js/main.js"></script>
+<script async defer type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuoUu9PsHOVOyp4j9v9TDEud0HTzffIKU&callback=initmap"
         onerror="handleGoogleError()"></script>
 </body>
 
